@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d77dc68336204e4bbf4cfa4638c15d0, type: 3}
+  m_Name: Tracks
+  m_EditorClassIdentifier: 
+  durability: 1
+  cardPlayCost: 0
+  powerConsumption: 0
+  description: Allow machines to move between interconnected tracks.
+  image: {fileID: 0}
+  boardPiece: {fileID: 7684306198006832182, guid: fdcfb025a49492a45abf0a4c40b683eb,
+    type: 3}
+  selectionUI: 0
+  hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}

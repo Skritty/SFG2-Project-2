@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d417dd6275c588841a521a37f9212312, type: 3}
+  m_Name: Pylon
+  m_EditorClassIdentifier: 
+  durability: 1
+  cardPlayCost: 0
+  powerConsumption: 0
+  description: A basic structure to run cables along.
+  image: {fileID: 0}
+  boardPiece: {fileID: 8450221923615330536, guid: 34dc3aaeb79c1414b8c02d0127cec237,
+    type: 3}
+  selectionUI: 1
+  hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  outputRate: 0
+  connectionRange: 2
+  maxConnections: 4

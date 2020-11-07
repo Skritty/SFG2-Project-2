@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0da15c8fe33b7142a13107340989b29, type: 3}
+  m_Name: Drill
+  m_EditorClassIdentifier: 
+  durability: 1
+  cardPlayCost: 1
+  powerConsumption: 3
+  description: 
+  image: {fileID: 0}
+  boardPiece: {fileID: 7628664778131623943, guid: a784c6a768db24741add33770f1fe8aa,
+    type: 3}
+  selectionUI: 12
+  hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}

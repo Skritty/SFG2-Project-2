@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 361bac5e5b3e37946b8133ec92f521f1, type: 3}
+  m_Name: UISettings
+  m_EditorClassIdentifier: 
+  hoverInfo: {fileID: 8360370828720120285, guid: 3ec6f6508df81a34c8000b2a599f0518,
+    type: 3}
+  selectInfo: {fileID: 4541651741505674949, guid: 664c1da345a97a64a9452844b4e21a91,
+    type: 3}
+  relPosFromTile: {x: 0, y: 1, z: 0}
+  deckCardDistBetween: {x: 1, y: 2}
+  handCardDistBetween: {x: 70, y: 0}
+  discardCardDistBetween: {x: 1, y: 2}
+  tileSelected: {fileID: 2100000, guid: 499022e255623a5459f01a0465befa5d, type: 2}
+  tileHovered: {fileID: 2100000, guid: 48dcfa45486f58a47ac1392c37d9f32a, type: 2}
+  cardZoomScale: 1.6
+  cardZoomMove: {x: 0, y: 30}
+  cardMoveScale: 0.4
