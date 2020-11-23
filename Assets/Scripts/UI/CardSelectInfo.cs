@@ -9,19 +9,7 @@ public class CardSelectInfo : MonoBehaviour
     [SerializeField] float innerOffset;
     [SerializeField] float outerOffset;
 
-    private void Start()
-    {
-        foreach (UICommandElement e in UIElementsInner)
-        {
-            e.gameObject.SetActive(false);
-        }
-        foreach (UICommandElement e in UIElementsOuter)
-        {
-            e.gameObject.SetActive(false);
-        }
-    }
-
-    public void EnableElements(SelectUIElements elements)
+    public void EnableElements(SelectUIElements elements, ColorType colors, Tile tile)
     {
         Vector3 offsetDir = Vector3.up;
         int totalInner = 0;
@@ -51,17 +39,19 @@ public class CardSelectInfo : MonoBehaviour
                 offsetDir = Quaternion.AngleAxis(360f / totalInner * i, Vector3.forward) * Vector3.up;
                 e.transform.position = transform.position + offsetDir * innerOffset;
                 e.gameObject.SetActive(true);
+                e.tile = tile;
                 i++;
             }
         }
         i = 0;
         foreach (UICommandElement e in UIElementsOuter)
         {
-            if (elements.HasFlag(e.element))
+            if (elements.HasFlag(e.element) && colors.HasFlag(e.color))
             {
                 offsetDir = Quaternion.AngleAxis(360f / totalOuter * i, Vector3.forward) * Vector3.up;
                 e.transform.position = transform.position + offsetDir * outerOffset;
                 e.gameObject.SetActive(true);
+                e.tile = tile;
                 i++;
             }
         }

@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class Toggle : ICommand
 {
-    Construction construction;
-    Tile tile;
+    Construction self;
 
-    public Toggle(Construction _construction, Tile _tile)
+    public Toggle(Construction _self)
     {
-        construction = _construction;
-        tile = _tile;
+        self = _self;
     }
 
     public void Execute()
     {
-        construction.Data.Activate(construction);
+        self.Data.Toggle(self);
     }
 
     public void Undo()

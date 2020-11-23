@@ -12,6 +12,7 @@ public class CardUI : MonoBehaviour
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI description;
     public TextMeshProUGUI powerCost;
+    public TextMeshProUGUI cardCost;
     public Sprite image;
     public GameObject selectBorder;
     public GameObject backface;

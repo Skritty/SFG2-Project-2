@@ -12,12 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbf200c9bda143a7fa9add6be87bf, type: 3}
   m_Name: Radar
   m_EditorClassIdentifier: 
-  durability: 1
+  durability: 15
   cardPlayCost: 1
   powerConsumption: 3
-  description: Prevents the opponent from using your infrastructure in range.
+  effectRange: 3
+  cardRating: 2
+  description: Locks machines within range so they can only be interacted with by
+    the owner.
   image: {fileID: 0}
   boardPiece: {fileID: 7179574312379972767, guid: 0ebaa87aad78adb44bc554862679400e,
     type: 3}
   selectionUI: 12
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 1

@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotate : MonoBehaviour
+public class Rotate : ICommand
 {
-    // Start is called before the first frame update
-    void Start()
+    Construction self;
+    Tile target;
+    public Rotate(Construction _self, Tile _target)
     {
-        
+        self = _self;
+        target = _target;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Execute()
     {
-        
+        // Rotate thing
+    }
+
+    public void Undo()
+    {
+
     }
 }

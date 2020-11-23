@@ -15,12 +15,15 @@ MonoBehaviour:
   durability: 1
   cardPlayCost: 0
   powerConsumption: 0
+  effectRange: 2
+  cardRating: 7
   description: A basic structure to run cables along.
   image: {fileID: 0}
   boardPiece: {fileID: 8450221923615330536, guid: 34dc3aaeb79c1414b8c02d0127cec237,
     type: 3}
   selectionUI: 1
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
-  outputRate: 0
-  connectionRange: 2
-  maxConnections: 4
+  initialColor: 1
+  outputRate: 10
+  maxOutputConnections: 4
+  maxInputConnections: 1

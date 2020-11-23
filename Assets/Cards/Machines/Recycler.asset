@@ -15,9 +15,15 @@ MonoBehaviour:
   durability: 1
   cardPlayCost: 1
   powerConsumption: 5
+  effectRange: 1
+  cardRating: 4
   description: 
   image: {fileID: 0}
   boardPiece: {fileID: 1540465205422440643, guid: 05de406d410220c4e9d7f3f85fd73eae,
     type: 3}
-  selectionUI: 14
+  selectionUI: 74
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 1

@@ -23,7 +23,7 @@ public class GameInput : MonoBehaviour
     public static Action<CardUI, Tile> WhileCardHeld = delegate { };
     public static Action<CardUI, Tile> OnCardDropped = delegate { };
 
-    public static Action<SelectUIElements, Tile> OnClickCommand = delegate { };
+    public static Action<SelectUIElements, ColorType, Tile> OnClickCommand = delegate { };
 
     [Header("UI references")]
     [SerializeField] GraphicRaycaster canvas;
@@ -32,6 +32,7 @@ public class GameInput : MonoBehaviour
     EventSystem eventSystem;
 
     List<RaycastResult> results;
+    bool hitUI = false;
 
     Tile selectedTile;
     Tile hoveredTile;
@@ -50,9 +51,10 @@ public class GameInput : MonoBehaviour
         pointerEvent.position = Input.mousePosition;
         results = new List<RaycastResult>();
         raycaster.Raycast(pointerEvent, results);
+        hitUI = false;
 
         SelectInteraction();
-        TileInteraction();
+        if(!hitUI) TileInteraction();
         CardInteraction();
         Tick();
     }
@@ -152,8 +154,8 @@ public class GameInput : MonoBehaviour
             {
                 if (selectedTile && result.gameObject.GetComponent<UICommandElement>())
                 {
-                    Debug.Log(selectedTile.contains[0]);
-                    OnClickCommand.Invoke(result.gameObject.GetComponent<UICommandElement>().element, selectedTile);
+                    hitUI = true;
+                    OnClickCommand.Invoke(result.gameObject.GetComponent<UICommandElement>().element, result.gameObject.GetComponent<UICommandElement>().color, result.gameObject.GetComponent<UICommandElement>().tile);
                     break;
                 }
             }

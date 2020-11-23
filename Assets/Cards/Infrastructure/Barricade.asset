@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: Barricade
   m_EditorClassIdentifier: 
   durability: 1
-  cardPlayCost: 1
+  cardPlayCost: 0
   powerConsumption: 0
+  effectRange: 0
+  cardRating: 1
   description: A strong barrier that does nothing.
   image: {fileID: 0}
   boardPiece: {fileID: 734129152378821472, guid: 440780f8679fccd418fac9858044a3bb,
     type: 3}
   selectionUI: 8
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 0

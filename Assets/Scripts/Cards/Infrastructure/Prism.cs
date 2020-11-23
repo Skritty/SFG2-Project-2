@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Prism", menuName = "Constructions/Infrastructure/Prism")]
-public class Prism : PowerTransferable
+public class Prism : ConstructionData, IPowerTransferable
 {
-    
+
 }

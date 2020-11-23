@@ -8,4 +8,9 @@ public class CGSWin : CardGameState
     {
         ui.winScreen.SetActive(true);
     }
+
+    public override void Exit()
+    {
+        ui.winScreen.SetActive(false);
+    }
 }

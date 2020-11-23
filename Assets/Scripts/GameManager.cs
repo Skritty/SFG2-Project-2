@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     Dictionary<Material, Color> initialColors = new Dictionary<Material, Color>();
 
     public int currentPlayer = 1;
+    public static Player CurrentPlayer => GameManager.manager.players[GameManager.manager.currentPlayer];
 
     private void Start()
     {

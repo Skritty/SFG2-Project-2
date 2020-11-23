@@ -15,9 +15,14 @@ MonoBehaviour:
   durability: 1
   cardPlayCost: 0
   powerConsumption: 0
+  effectRange: 0
   description: Allow machines to move between interconnected tracks.
   image: {fileID: 0}
   boardPiece: {fileID: 7684306198006832182, guid: fdcfb025a49492a45abf0a4c40b683eb,
     type: 3}
   selectionUI: 0
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 0
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 0

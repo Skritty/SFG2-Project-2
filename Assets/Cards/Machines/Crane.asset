@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b9962e517e632418a93b8adbbdffb6, type: 3}
   m_Name: Crane
   m_EditorClassIdentifier: 
-  durability: 1
+  durability: 5
   cardPlayCost: 1
   powerConsumption: 3
+  effectRange: 1
+  cardRating: 6
   description: 
   image: {fileID: 0}
   boardPiece: {fileID: 7780193801598664614, guid: 3a41060945d38df48bc30a8173e346ce,
     type: 3}
   selectionUI: 8
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 1

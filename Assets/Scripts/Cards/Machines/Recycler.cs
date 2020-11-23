@@ -10,8 +10,8 @@ public class Recycler : ConstructionData, IRailCompatable
         base.DoTurn(target);
     }
 
-    public void Move(Transform target)
+    public override void Activate(Construction target)
     {
-        throw new System.NotImplementedException();
+        // Destroy construction
     }
 }

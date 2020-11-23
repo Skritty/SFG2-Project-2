@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0da15c8fe33b7142a13107340989b29, type: 3}
   m_Name: Drill
   m_EditorClassIdentifier: 
-  durability: 1
+  durability: 6
   cardPlayCost: 1
   powerConsumption: 3
+  effectRange: 0
+  cardRating: 4
   description: 
   image: {fileID: 0}
   boardPiece: {fileID: 7628664778131623943, guid: a784c6a768db24741add33770f1fe8aa,
     type: 3}
-  selectionUI: 12
+  selectionUI: 40
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 1

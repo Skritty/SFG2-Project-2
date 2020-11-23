@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Laser", menuName = "Constructions/Machines/Laser")]
-public class Laser : ConstructionData, IRailCompatable
+public class Laser : ConstructionData, IRailCompatable, IPowerTransferable
 {
     public override void Activate(Construction target)
     {

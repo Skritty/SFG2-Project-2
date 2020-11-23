@@ -15,6 +15,43 @@ public class UISettings : ScriptableObject
     [SerializeField] Vector3 relPosFromTile;
     public Vector3 RelPosFromTile => relPosFromTile;
 
+    [SerializeField] Material hoverAoE;
+    public Material HoverAoE => hoverAoE;
+
+    [SerializeField] Material selectAoE;
+    public Material SelectAoE => selectAoE;
+
+    [SerializeField] Material interactionRange;
+    public Material InteractionRange => interactionRange;
+
+    [SerializeField] GameObject selectionTarget;
+    public GameObject SelectionTarget => selectionTarget;
+
+    [SerializeField] GameObject connectionWhite;
+    public GameObject ConnectionWhite => connectionWhite;
+
+    [SerializeField] GameObject connectionRed;
+    public GameObject ConnectionRed => connectionRed;
+
+    [SerializeField] GameObject connectionGreen;
+    public GameObject ConnectionGreen => connectionGreen;
+
+    [SerializeField] GameObject connectionBlue;
+    public GameObject ConnectionBlue => connectionBlue;
+
+    [SerializeField] Material wireWhite;
+    public Material WireWhite => wireWhite;
+
+    [SerializeField] Material wireRed;
+    public Material WireRed => wireRed;
+
+    [SerializeField] Material wireGreen;
+    public Material WireGreen => wireGreen;
+
+    [SerializeField] Material wireBlue;
+    public Material WireBlue => wireBlue;
+    
+
     [Header("Deck")]
     [SerializeField] Vector2 deckCardDistBetween;
     public Vector2 DeckCardDistBetween => deckCardDistBetween;

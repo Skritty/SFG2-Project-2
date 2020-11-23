@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ce70598168aa6c4f970af0e133acc37, type: 3}
   m_Name: Laser
   m_EditorClassIdentifier: 
-  durability: 1
+  durability: -1
   cardPlayCost: 1
   powerConsumption: 2
+  effectRange: 1
+  cardRating: 3
   description: 
   image: {fileID: 0}
   boardPiece: {fileID: 3479313692367778232, guid: 6c7f2bfaacc3dfb46ba5e7d8831ddaa5,
     type: 3}
-  selectionUI: -1
+  selectionUI: 15
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 1
+  maxInputConnections: 1

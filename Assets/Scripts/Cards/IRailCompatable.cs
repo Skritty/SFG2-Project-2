@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IRailCompatable
 {
-    void Move(Transform target);
+
 }

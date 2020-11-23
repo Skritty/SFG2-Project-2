@@ -6,5 +6,6 @@ using UnityEngine;
 public class UICommandElement : MonoBehaviour
 {
     public SelectUIElements element;
+    public ColorType color;
     public Tile tile;
 }

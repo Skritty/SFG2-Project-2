@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    Dictionary<Renderer, Material> initialMaterials = new Dictionary<Renderer, Material>();
+    Dictionary<Renderer, List<Material>> initialMaterials = new Dictionary<Renderer, List<Material>>();
     public int x;
     public int y;
-    public List<Construction> contains = new List<Construction>();
+    Construction _contains = null;
+    public Construction contains { get { return _contains; } set { _contains = value; } }
+    Construction _rail = null;
+    public Construction rail { get { return _rail; } set { _rail = value; } }
+
+    // Tile Buffs
+    public bool bonusBuilds;
 
     private void Start()
     {
@@ -15,24 +21,33 @@ public class Tile : MonoBehaviour
         {
             if(r.tag == "Tile")
             {
-                initialMaterials.Add(r, r.sharedMaterial);
+                initialMaterials.Add(r, new List<Material>());
+                initialMaterials[r].Add(r.sharedMaterial);
             }
         }
     }
 
     public void SetMaterial(Material m)
     {
-        foreach (KeyValuePair<Renderer, Material> r in initialMaterials)
+        foreach (KeyValuePair<Renderer, List<Material>> r in initialMaterials)
         {
+            if(!initialMaterials.ContainsKey(r.Key)) initialMaterials.Add(r.Key, new List<Material>());
+            initialMaterials[r.Key].Add(m);
             r.Key.sharedMaterial = m;
         }
     }
 
-    public void ResetMaterial()
+    public void RemoveMaterial(Material m)
     {
-        foreach (KeyValuePair<Renderer, Material> r in initialMaterials)
+        foreach (KeyValuePair<Renderer, List<Material>> r in initialMaterials)
         {
-            r.Key.sharedMaterial = r.Value;
+            r.Value.Remove(m);
+            r.Key.sharedMaterial = r.Value[r.Value.Count - 1];
         }
+    }
+
+    public void ResetBuffs()
+    {
+        bonusBuilds = false;
     }
 }

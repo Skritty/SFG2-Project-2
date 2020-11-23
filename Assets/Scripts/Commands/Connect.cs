@@ -4,42 +4,26 @@ using UnityEngine;
 
 public class Connect : ICommand
 {
-    public static Construction source;
+    Construction source;
     Construction target;
-    Tile tile;
+    ColorType color;
 
-    public Connect(Construction _self, Tile _tile)
+    public Connect(Construction _source, Construction _target, ColorType _color)
     {
-        target = _self;
-        tile = _tile;
+        source = _source;
+        target = _target;
+        color = _color;
     }
 
     public void Execute()
     {
-        if(source == null)
-        {
-            PowerTransferable d = (PowerTransferable)target.Data;
-            if (d == null) return;
-            source = target;
-            foreach(Tile t in GameManager.manager.board.GetConstructionTilesInRadius(tile, d.ConnectionRange))
-            {
-                Construction c = t.contains.Find(x => x != null && x.Data.GetType() != typeof(Tracks));
-            }
-        }
-        else
-        {
-            PowerTransferable d = (PowerTransferable)source.Data;
-            if (d == null) return;
-            WireConnection c = GameObject.Instantiate(GameManager.manager.UIManager.wire, source.obj.transform).GetComponent<WireConnection>();
-            c.BuildWire(source, target, d.OutputRate);
-            target.connections.Add(c);
-            source.connections.Add(c);
-            source = null;
-        }
+        WireConnection c = GameObject.Instantiate(GameManager.manager.UIManager.wire, source.obj.transform).GetComponent<WireConnection>();
+        c.BuildWire(source, target, color);
+        if (!target.color.HasFlag(color)) target.color = target.color | color;
     }
 
     public void Undo()
     {
-        throw new System.NotImplementedException();
+
     }
 }

@@ -12,7 +12,8 @@ public class GameUI : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] Player otherPlayer;
     public GameObject wire; // Add to settings
-    public GameObject connectionPoint;
+    
+    
 
     [Header("Menu References")]
     public Canvas playerCanvas;
@@ -21,6 +22,7 @@ public class GameUI : MonoBehaviour
     public GameObject loseScreen;
     public Button playerEndTurnButton;
     public TextMeshProUGUI playerEndTurnButtonText;
+    public TextMeshProUGUI boardPositionText;
 
     [Header("Card Anchors")]
     [SerializeField] Transform machineDeckAnchor;
@@ -36,6 +38,7 @@ public class GameUI : MonoBehaviour
     int zoomCardPrevIndex;
     CardHoverInfo hoverInfo;
     [HideInInspector] public CardSelectInfo selectInfo;
+    List<UICommandElement> selections = new List<UICommandElement>();
 
     private void Start()
     {
@@ -54,6 +57,7 @@ public class GameUI : MonoBehaviour
         GameInput.OnTileHoverExit += TileFeedbackReset;
         GameInput.OnTileSelect += TileSelectedFeedback;
         GameInput.OnTileDeselect += TileFeedbackReset;
+        GameInput.OnTileDeselect += ClearSelections;
         GameInput.WhileTileHovered += ShowHoverInfo;
         GameInput.OnTileHoverExit += HideHoverInfo;
     }
@@ -65,10 +69,10 @@ public class GameUI : MonoBehaviour
         DisplayHand(player.hand, handAnchor);
         DisplayDiscard(player.discard, discardAnchor);
 
-        /*DisplayDeck(otherPlayer.machineDeck, otherMachineDeckAnchor);
+        DisplayDeck(otherPlayer.machineDeck, otherMachineDeckAnchor);
         DisplayDeck(otherPlayer.infrastructureDeck, otherInfrastructureDeckAnchor);
         DisplayHand(otherPlayer.hand, otherHandAnchor);
-        DisplayDiscard(otherPlayer.discard, otherDiscardAnchor);*/
+        DisplayDiscard(otherPlayer.discard, otherDiscardAnchor);
     }
 
     private void DisplayDeck(Deck<Construction> deck, Transform anchor)
@@ -133,30 +137,99 @@ public class GameUI : MonoBehaviour
 
     private void TileFeedbackReset(Tile tile)
     {
-        tile?.ResetMaterial();
+        tile?.RemoveMaterial(settings.TileHovered);
+        tile?.RemoveMaterial(settings.TileSelected);
     }
 
     private void ShowHoverInfo(Tile tile)
     {
-        if (!hoverInfo.gameObject.activeSelf && tile != null && tile.contains.Count > 0)
+        if(boardPositionText != null)
         {
-            Construction c = tile.contains.Find(x => x != null && x.Data.GetType() != typeof(Tracks));
-            if (c == null) return;
+            boardPositionText.gameObject.SetActive(true);
+            boardPositionText.transform.position = Input.mousePosition + new Vector3(0, 0);
+            boardPositionText.text = "(" + tile.x + ',' + tile.y + ')';
+        }
+        
+        if (!hoverInfo.gameObject.activeSelf && tile != null && tile.contains != null)
+        {
             Vector3 screenPos = Camera.main.WorldToScreenPoint(tile.transform.position + settings.RelPosFromTile);
             hoverInfo.transform.position = screenPos;
-            hoverInfo.cardName.text = c.Data.name;
-            hoverInfo.powerUsage.text = ""+c.Data.PowerConsumption;
+            hoverInfo.cardName.text = tile.contains.Data.name;
+            hoverInfo.powerUsage.text = ""+ tile.contains.Data.PowerConsumption;
             hoverInfo.gameObject.SetActive(true);
+            foreach (Tile t in GameManager.manager.board.GetAllTilesInRadius(tile, tile.contains.Data.EffectRange)) t.SetMaterial(settings.HoverAoE);
         }
     }
 
     private void HideHoverInfo(Tile tile)
     {
+        if (boardPositionText != null)
+        {
+            boardPositionText.gameObject.SetActive(false);
+        }
+
+        if (tile == null || tile.contains == null) return;
+        foreach (Tile t in GameManager.manager.board.GetAllTilesInRadius(tile, tile.contains.Data.EffectRange)) t.RemoveMaterial(settings.HoverAoE);
         hoverInfo.gameObject.SetActive(false);
     }
 
-    public void ShowConnectionPoint(Construction c, Tile t)
+    public void ShowConnectionPoints(Construction c, ColorType color)
     {
+        foreach (Tile t in GameManager.manager.board.GetConstructionTilesInRadius(c.tile, c.Data.EffectRange))
+        {
+            if (t.contains == null || t.contains.inputConnections >= t.contains.Data.MaxInputConnections || (t.contains.ownerIndex != GameManager.manager.currentPlayer && t.contains.accessProtected)) continue;
+            foreach (WireConnection wc in t.contains.connections) if (wc.target == c) continue;
+            foreach (WireConnection wc in c.connections) if (wc.target == t.contains) continue;
+            UICommandElement ui = null;
+            switch (color)
+            {
+                case ColorType.White:
+                    ui = GameObject.Instantiate(settings.ConnectionWhite, playerCanvas.transform).GetComponent<UICommandElement>();
+                    break;
+                case ColorType.Red:
+                    ui = GameObject.Instantiate(settings.ConnectionRed, playerCanvas.transform).GetComponent<UICommandElement>();
+                    break;
+                case ColorType.Green:
+                    ui = GameObject.Instantiate(settings.ConnectionGreen, playerCanvas.transform).GetComponent<UICommandElement>();
+                    break;
+                case ColorType.Blue:
+                    ui = GameObject.Instantiate(settings.ConnectionBlue, playerCanvas.transform).GetComponent<UICommandElement>();
+                    break;
+            }
+            if (ui == null) continue;
+            ui.transform.position = Camera.main.WorldToScreenPoint(t.transform.position + settings.RelPosFromTile);
+            ui.tile = t;
+            selections.Add(ui);
+        }
+    }
 
+    public void ShowTargetPoints(Construction c)
+    {
+        foreach (Tile t in GameManager.manager.board.GetConstructionTilesInRadius(c.tile, c.Data.EffectRange))
+        {
+            if (!t.contains.targetable) return;
+            UICommandElement ui = GameObject.Instantiate(settings.SelectionTarget, playerCanvas.transform).GetComponent<UICommandElement>();
+            ui.transform.position = Camera.main.WorldToScreenPoint(t.transform.position + settings.RelPosFromTile);
+            ui.tile = t;
+            selections.Add(ui);
+        }
+    }
+
+    public void ShowDirections(Tile tile)
+    {
+        foreach (Tile t in GameManager.manager.board.GetAllTilesInRadius(tile, 1))
+        {
+            if (!t.contains.targetable) return;
+            UICommandElement ui = GameObject.Instantiate(settings.SelectionTarget, playerCanvas.transform).GetComponent<UICommandElement>();
+            ui.transform.position = Camera.main.WorldToScreenPoint(t.transform.position + settings.RelPosFromTile);
+            ui.tile = t;
+            selections.Add(ui);
+        }
+    }
+
+    public void ClearSelections(Tile t)
+    {
+        foreach (UICommandElement e in selections) GameObject.Destroy(e.gameObject);
+        selections.Clear();
     }
 }

@@ -42,11 +42,13 @@ public class CGSInitial : CardGameState
     {
         for (float i = 0; i < p.startingMachineCards; i++)
         {
-            p.hand.Add(p.machineDeck.Draw());
+            Construction card = p.machineDeck.Draw();
+            if (card != null) p.hand.Add(card);
         }
         for (float i = 0; i < p.startingInfrastructureCards; i++)
         {
-            p.hand.Add(p.infrastructureDeck.Draw());
+            Construction card = p.infrastructureDeck.Draw();
+            if (card != null) p.hand.Add(card);
         }
 
         ui.UpdateUI();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Core", menuName = "Constructions/Board/Core")]
-public class Core : PowerTransferable
+public class Core : ConstructionData, IPowerTransferable
 {
     public override void Connect(Construction self, Construction target, ColorType type)
     {

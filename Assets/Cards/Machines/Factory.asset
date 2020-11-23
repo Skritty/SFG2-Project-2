@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e970d147da491c541b6007cf277c7bc5, type: 3}
   m_Name: Factory
   m_EditorClassIdentifier: 
-  durability: 1
+  durability: 8
   cardPlayCost: 1
   powerConsumption: 3
+  effectRange: 0
+  cardRating: 4
   description: 
   image: {fileID: 0}
   boardPiece: {fileID: 9065217490833198249, guid: ea3bc8c85f9935c4db4e7171142d149a,
     type: 3}
-  selectionUI: 12
+  selectionUI: 40
   hoverUI: {fileID: 2241738273549969457, guid: 3ec6f6508df81a34c8000b2a599f0518, type: 3}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 1

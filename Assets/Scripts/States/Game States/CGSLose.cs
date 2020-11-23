@@ -8,4 +8,9 @@ public class CGSLose : CardGameState
     {
         ui.loseScreen.SetActive(true);
     }
+
+    public override void Exit()
+    {
+        ui.loseScreen.SetActive(false);
+    }
 }

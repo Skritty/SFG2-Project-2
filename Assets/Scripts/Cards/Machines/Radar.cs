@@ -7,7 +7,13 @@ public class Radar : ConstructionData, IRailCompatable
 {
     public override void DoTurn(Construction target)
     {
-        base.DoTurn(target);
+        foreach(Tile t in GameManager.manager.board.GetConstructionTilesInRadius(target.tile, EffectRange))
+        {
+            if (!t.contains.accessProtected)
+            {
+                t.contains.accessProtected = true;
+            }
+        }
     }
 
     public void Move(Transform target)

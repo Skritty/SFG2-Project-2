@@ -7,12 +7,11 @@ public class Crane : ConstructionData, IRailCompatable
 {
     public override void DoTurn(Construction target)
     {
-        base.DoTurn(target);
-    }
-
-    public void Move(Transform target)
-    {
-        throw new System.NotImplementedException();
+        GameManager.CurrentPlayer.extraCardsPlayed++;
+        foreach(Tile t in GameManager.manager.board.GetAllTilesInRadius(target.tile, EffectRange))
+        {
+            t.bonusBuilds = true;
+        }
     }
 }
 
