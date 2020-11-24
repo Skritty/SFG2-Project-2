@@ -621,7 +621,6 @@ GameObject:
   - component: {fileID: 2482089497425826206}
   - component: {fileID: 4679832788241073572}
   - component: {fileID: 8407474687071396100}
-  - component: {fileID: 4825368762944490848}
   m_Layer: 5
   m_Name: Cardback
   m_TagString: Untagged
@@ -685,21 +684,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4825368762944490848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3780710966272399084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: -1, y: -1}
-  m_UseGraphicAlpha: 1
 --- !u!1 &5018405508088220652
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,6 +925,7 @@ GameObject:
   - component: {fileID: 5401417946961634720}
   - component: {fileID: 5401417946961634722}
   - component: {fileID: 5401417946961634723}
+  - component: {fileID: 1601771258167270251}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -1004,6 +989,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1601771258167270251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5401417946961634721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: -1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &5401417947822728296
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,6 +1221,7 @@ MonoBehaviour:
     data: {fileID: 0}
     durability: 0
     connections: []
+    inputConnections: 0
     card: {fileID: 0}
     obj: {fileID: 0}
     tile: {fileID: 0}
@@ -1228,6 +1229,8 @@ MonoBehaviour:
     enabled: 0
     powered: 0
     accessProtected: 0
+    targetable: 0
+    color: 0
 --- !u!1 &6021510917967714788
 GameObject:
   m_ObjectHideFlags: 0

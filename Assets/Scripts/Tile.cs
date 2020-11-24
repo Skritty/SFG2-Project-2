@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour
     public Construction rail { get { return _rail; } set { _rail = value; } }
 
     // Tile Buffs
-    public bool bonusBuilds;
+    public int buildsRemaining;
 
     private void Start()
     {
@@ -48,6 +48,11 @@ public class Tile : MonoBehaviour
 
     public void ResetBuffs()
     {
-        bonusBuilds = false;
+        buildsRemaining = 1;
+    }
+
+    public override string ToString()
+    {
+        return "(" + x + "," + y + ")";
     }
 }

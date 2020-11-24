@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d7ed1fa0d4f52d428dd3f247e7b08ce, type: 3}
+  m_Name: Scrap
+  m_EditorClassIdentifier: 
+  durability: 0
+  cardPlayCost: 0
+  powerConsumption: 0
+  effectRange: 0
+  cardRating: -100
+  description: Scrap for turning into new machines. Cannot be played.
+  image: {fileID: 0}
+  boardPiece: {fileID: 0}
+  selectionUI: 0
+  hoverUI: {fileID: 0}
+  initialColor: 1
+  outputRate: 0
+  maxOutputConnections: 0
+  maxInputConnections: 0

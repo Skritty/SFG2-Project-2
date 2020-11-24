@@ -14,6 +14,8 @@ public class Construction
 
     public List<WireConnection> connections = new List<WireConnection>();
     public int inputConnections = 0;
+    public int powerIntake = 0;
+    public int powerOutput = 0;
 
     public CardUI card;
     public GameObject obj;
@@ -55,13 +57,16 @@ public class Construction
     public void TransferPower(int power)
     {
         BuffReset();
-        power -= Data.PowerConsumption; 
+        powerIntake = power;
+        powerOutput = 0;
+        power -= Data.PowerConsumption;
         if (power < 0) return;
         powered = true;
         GameManager.CurrentPlayer.coreCurrentPower -= Data.PowerConsumption;
         durability--;
         if (durability == 0) Destroy();
         if (power == 0) return;
+        powerOutput = power;
         foreach (WireConnection c in connections)
         {
             c.target.TransferPower(Mathf.Clamp(power / connections.Count, 0, data.OutputRate));

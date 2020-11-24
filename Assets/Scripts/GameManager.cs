@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager manager;
     public GameUI UIManager;
+    public AudioManager audioManager;
     public Player[] players;
     public Board board;
     public StateMachine stateMachine;

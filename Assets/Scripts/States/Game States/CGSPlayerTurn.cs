@@ -10,6 +10,8 @@ public class CGSPlayerTurn : CardGameState
 
     public override void Enter()
     {
+        GameManager.manager.audioManager.PlayAudioClip(GameManager.manager.audioManager.settings.TurnChange, Vector3.zero);
+
         manager.currentPlayer = 0;
         ResetTurnStuff();
         DrawCards(GameManager.CurrentPlayer);
@@ -54,9 +56,17 @@ public class CGSPlayerTurn : CardGameState
     private void DrawCards(Player p)
     {
         Construction card = p.machineDeck.Draw();
-        if(card != null) p.hand.Add(card);
+        if(card != null)
+        {
+            p.hand.Add(card);
+            GameManager.manager.audioManager.PlayAudioClip(GameManager.manager.audioManager.settings.CardDraw, Vector3.zero);
+        }
         card = p.infrastructureDeck.Draw();
-        if (card != null) p.hand.Add(card);
+        if (card != null)
+        {
+            p.hand.Add(card);
+            GameManager.manager.audioManager.PlayAudioClip(GameManager.manager.audioManager.settings.CardDraw, Vector3.zero);
+        }
     }
 
     private void ActivateMachines()
@@ -108,7 +118,7 @@ public class CGSPlayerTurn : CardGameState
     private void PlaceCard(CardUI card, Tile tile)
     {
         // Acceptable to place?
-        if (tile == null || (card.info.Data.CardPlayCost + GameManager.CurrentPlayer.cardsPlayed > GameManager.CurrentPlayer.cardsPlayedPerTurn && (GameManager.CurrentPlayer.extraCardsPlayed < 1 || !tile.bonusBuilds))
+        if (tile == null || card.info.Data.BoardPiece == null || (card.info.Data.CardPlayCost + GameManager.CurrentPlayer.cardsPlayed > GameManager.CurrentPlayer.cardsPlayedPerTurn && (GameManager.CurrentPlayer.extraCardsPlayed < 1 || tile.buildsRemaining == 0))
             || !GameManager.manager.board.TileInPlayerRange(GameManager.manager.currentPlayer, tile, GameManager.CurrentPlayer.interactionRange))
         {
             card.ResetTransform();
@@ -125,6 +135,7 @@ public class CGSPlayerTurn : CardGameState
             card.gameObject.SetActive(false);
             card.ResetTransform();
             GameManager.CurrentPlayer.cardsPlayed += card.info.Data.CardPlayCost;
+            GameManager.manager.board.LowerBuildsRemaining(card.info.Data.CardPlayCost);
             card = null;
             ui.UpdateUI();
         }
@@ -139,6 +150,7 @@ public class CGSPlayerTurn : CardGameState
             card.gameObject.SetActive(false);
             card.ResetTransform();
             GameManager.CurrentPlayer.cardsPlayed += card.info.Data.CardPlayCost;
+            GameManager.manager.board.LowerBuildsRemaining(card.info.Data.CardPlayCost);
             card = null;
             ui.UpdateUI();
         }
@@ -159,7 +171,7 @@ public class CGSPlayerTurn : CardGameState
         if (!GameManager.CurrentPlayer.hand.Contains(card.info)) return;
         foreach (Tile t in GameManager.manager.board.GetTilesInPlayerRange(GameManager.manager.currentPlayer, GameManager.CurrentPlayer.interactionRange))
         {
-            t.SetMaterial(GameManager.manager.UIManager.settings.InteractionRange);
+            if (t.buildsRemaining - card.info.Data.CardPlayCost >= 0) t.SetMaterial(GameManager.manager.UIManager.settings.InteractionRange);
         }
     }
     private void ResetCardPlaceRange(CardUI card, Tile tile)
@@ -189,7 +201,8 @@ public class CGSPlayerTurn : CardGameState
     private void ShowSelectionRange(Tile tile)
     {
         if (tile.contains != null)
-            foreach (Tile t in GameManager.manager.board.GetAllTilesInRadius(tile, tile.contains.Data.EffectRange)) t.SetMaterial(GameManager.manager.UIManager.settings.SelectAoE);
+            foreach (Tile t in GameManager.manager.board.GetAllTilesInRadius(tile, tile.contains.Data.EffectRange))
+                 t.SetMaterial(GameManager.manager.UIManager.settings.SelectAoE);
     }
     private void HideSelectionRange(Tile tile)
     {

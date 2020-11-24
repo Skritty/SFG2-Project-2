@@ -11,37 +11,9 @@ public class CGSBotTurn : CardGameState
         public bool chosen = false;
         int choiceRating = -1;
 
-        Construction construction;
-        List<Construction> nearbyAllyConstructions = new List<Construction>();
-        List<Construction> nearbyEnemyConstructions = new List<Construction>();
-        int distanceToCore = 0;
-        int distanceToObelisk = 0;
-        
-
         public CardPlayChoice(Tile t)
         {
             tile = t;
-            distanceToCore = Mathf.Abs(GameManager.CurrentPlayer.ownedOnBoard[1].tile.x - t.x) + Mathf.Abs(GameManager.CurrentPlayer.ownedOnBoard[1].tile.y - t.y);
-            distanceToObelisk = Mathf.Abs(GameManager.CurrentPlayer.ownedOnBoard[0].tile.x - t.x) + Mathf.Abs(GameManager.CurrentPlayer.ownedOnBoard[0].tile.y - t.y);
-        }
-
-        //TODO: Add a better AI by writing a function for each construction that takes in an improved "CardPlayChoice" class and returns a "rating" depending on how good that tile would be to play in.
-        public int CalculateChoiceRating(Construction c)
-        {
-            if (tile.contains != null) return -100;
-            foreach (Tile t in GameManager.manager.board.GetConstructionTilesInRadius(tile, c.Data.EffectRange))
-            {
-                if (t.contains.ownerIndex == GameManager.manager.currentPlayer)
-                {
-                    nearbyAllyConstructions.Add(t.contains);
-                }
-                else
-                {
-                    nearbyEnemyConstructions.Add(t.contains);
-                }
-            }
-
-            return distanceToCore - distanceToObelisk - nearbyAllyConstructions.Count + nearbyEnemyConstructions.Count;
         }
     }
 
@@ -64,6 +36,9 @@ public class CGSBotTurn : CardGameState
 
     public override void Enter()
     {
+        GameManager.manager.UIManager.ShowButton();
+        GameManager.manager.audioManager.PlayAudioClip(GameManager.manager.audioManager.settings.TurnChange, Vector3.zero);
+
         manager.currentPlayer = 1;
         ResetTurnStuff();
         DrawCards(GameManager.CurrentPlayer);
@@ -82,12 +57,19 @@ public class CGSBotTurn : CardGameState
         {
             stateMachine.ChangeState<CGSWin>();
         }
-        if (GameManager.CurrentPlayer.obelistPowerCurrent >= GameManager.CurrentPlayer.ObeliskPowerToWin)
+        else if (GameManager.CurrentPlayer.obelistPowerCurrent >= GameManager.CurrentPlayer.ObeliskPowerToWin)
         {
             stateMachine.ChangeState<CGSLose>();
         }
+        else
+        {
+            stateMachine.ChangeState<CGSPlayerTurn>();
+        }
+    }
 
-        stateMachine.ChangeState<CGSPlayerTurn>();
+    public override void Exit()
+    {
+        GameManager.manager.UIManager.HideButton();
     }
 
     #region Turn Initialization
@@ -103,9 +85,17 @@ public class CGSBotTurn : CardGameState
     private void DrawCards(Player p)
     {
         Construction card = p.machineDeck.Draw();
-        if (card != null) p.hand.Add(card);
+        if (card != null)
+        {
+            p.hand.Add(card);
+            GameManager.manager.audioManager.PlayAudioClip(GameManager.manager.audioManager.settings.CardDraw, Vector3.zero);
+        }
         card = p.infrastructureDeck.Draw();
-        if (card != null) p.hand.Add(card);
+        if (card != null)
+        {
+            p.hand.Add(card);
+            GameManager.manager.audioManager.PlayAudioClip(GameManager.manager.audioManager.settings.CardDraw, Vector3.zero);
+        }
     }
 
     private void ActivateMachines()
@@ -126,12 +116,12 @@ public class CGSBotTurn : CardGameState
 
     private void PlaceCard(CardUI card, Tile tile)
     {
-        Debug.Log(card.info.Data.name);
         // Acceptable to place?
-        if (tile == null || (card.info.Data.CardPlayCost + GameManager.CurrentPlayer.cardsPlayed > GameManager.CurrentPlayer.cardsPlayedPerTurn && (GameManager.CurrentPlayer.extraCardsPlayed < 1 || !tile.bonusBuilds))
+        if (tile == null || card.info.Data.BoardPiece == null || (card.info.Data.CardPlayCost + GameManager.CurrentPlayer.cardsPlayed > GameManager.CurrentPlayer.cardsPlayedPerTurn && (GameManager.CurrentPlayer.extraCardsPlayed < 1 || tile.buildsRemaining == 0))
             || !GameManager.manager.board.TileInPlayerRange(GameManager.manager.currentPlayer, tile, GameManager.CurrentPlayer.interactionRange))
         {
             //card.ResetTransform();
+            Debug.LogError("Failed to Build");
             return;
         }
 
@@ -145,6 +135,7 @@ public class CGSBotTurn : CardGameState
             card.gameObject.SetActive(false);
             card.ResetTransform();
             GameManager.CurrentPlayer.cardsPlayed += card.info.Data.CardPlayCost;
+            GameManager.manager.board.LowerBuildsRemaining(card.info.Data.CardPlayCost);
             card = null;
             ui.UpdateUI();
         }
@@ -159,12 +150,14 @@ public class CGSBotTurn : CardGameState
             card.gameObject.SetActive(false);
             card.ResetTransform();
             GameManager.CurrentPlayer.cardsPlayed += card.info.Data.CardPlayCost;
+            GameManager.manager.board.LowerBuildsRemaining(card.info.Data.CardPlayCost);
             card = null;
             ui.UpdateUI();
         }
         else
         {
             //card.ResetTransform();
+            //Debug.LogError("Failed to Build "+card.info.Data.name+". Reason: "+ tile.contains.Data.name +" at "+tile.ToString());
             return;
         }
     }
@@ -176,9 +169,7 @@ public class CGSBotTurn : CardGameState
 
     private void ChooseAndPlay()
     {
-
-        List<CardPlayData> toPlay = new List<CardPlayData>();
-        CardPlayData bestCostCard = null;
+        // Play all free cards
         foreach(Construction card in GameManager.CurrentPlayer.hand)
         {
             choices.Clear();
@@ -190,48 +181,77 @@ public class CGSBotTurn : CardGameState
 
             int bestScore = -99;
             Tile selectedTile = null;
-
-            // If it's a 0 cost card, find the best place to play it and do so
+            
             if (card.Data.CardPlayCost == 0)
             {
                 foreach (CardPlayChoice option in choices)
                 {
-                    Debug.Log(option.CalculateChoiceRating(card));
-                    if (option.CalculateChoiceRating(card) > bestScore)
+                    if (card.Data.CalculateChoiceRating(option.tile, card) > bestScore)
                     {
-                        bestScore = option.CalculateChoiceRating(card);
+                        bestScore = card.Data.CalculateChoiceRating(option.tile, card);
                         selectedTile = option.tile;
                     }
                 }
-                PlaceCard(card.card, selectedTile);
-            }
-            // If it is a 1 cost card, find out which has the highest play rating
-            else
-            {
-                if (bestCostCard != null && bestCostCard.cardRating > card.Data.CardRating) continue;
-                foreach (CardPlayChoice option in choices)
-                {
-                    if (option.CalculateChoiceRating(card) > bestScore)
-                    {
-                        bestScore = option.CalculateChoiceRating(card);
-                        selectedTile = option.tile;
-                    }
-                }
-                bestCostCard = new CardPlayData(card, selectedTile, card.Data.CardRating);
+                PlayAndConnect(new CardPlayData(card, selectedTile, card.Data.CardRating));
             }
         }
-        if(bestCostCard != null) PlaceCard(bestCostCard.construction.card, bestCostCard.playTile);
-        foreach(Construction c in toRemove) GameManager.CurrentPlayer.hand.Remove(c);
-        //PlayCards(toPlay);
+
+        int breakpoint = 0;
+        //Play cost cards until there are no more places to play
+        while (GameManager.manager.board.HasBuildSpot() && breakpoint < 20)
+        {
+            CardPlayData bestCostCard = null;
+            foreach (Construction card in GameManager.CurrentPlayer.hand)
+            {
+                breakpoint++;
+                choices.Clear();
+                // These choices are potential tile placement spots
+                foreach (Tile t in GameManager.manager.board.GetPoweredTilesInPlayerRange(GameManager.manager.currentPlayer))
+                {
+                    choices.Add(new CardPlayChoice(t));
+                }
+
+                int bestScore = -99;
+                Tile selectedTile = null;
+                
+                if (card.Data.CardPlayCost != 0)
+                {
+                    if (bestCostCard != null && bestCostCard.cardRating > card.Data.CardRating) continue;
+                    foreach (CardPlayChoice option in choices)
+                    {
+                        if (card.Data.CalculateChoiceRating(option.tile, card) > bestScore)
+                        {
+                            bestScore = card.Data.CalculateChoiceRating(option.tile, card);
+                            selectedTile = option.tile;
+                        }
+                    }
+                    bestCostCard = new CardPlayData(card, selectedTile, card.Data.CardRating);
+                }
+            }
+
+            if (bestCostCard != null) PlayAndConnect(bestCostCard);
+            else break;
+            foreach (Construction c in toRemove) GameManager.CurrentPlayer.hand.Remove(c);
+        }
+        
+        Construction source = FindFirst(GameManager.CurrentPlayer.powerGridRoot, GameManager.CurrentPlayer.ownedOnBoard[0].tile);
+        if(source != null && GameManager.CurrentPlayer.ownedOnBoard[0].inputConnections == 0) CommandInvoker.ExecuteCommand(new Connect(source, GameManager.CurrentPlayer.ownedOnBoard[0], source.color));
     }
 
-    /*private void PlayCards(List<CardPlayData> toPlay)
+    private void PlayAndConnect(CardPlayData toPlay)
     {
-        foreach(CardPlayData data in toPlay)
-        {
-            Debug.Log("Bot is playing " + data.construction.Data.name + " at tile ("+data.playTile.x+","+data.playTile.y+")");
-            PlaceCard(data.construction.card, data.playTile);
-        }
-    }*/
+        PlaceCard(toPlay.construction.card, toPlay.playTile);
+        if (toPlay.construction.obj == null || toPlay.construction.Data is Tracks) return;
+        Construction source = FindFirst(GameManager.CurrentPlayer.powerGridRoot, toPlay.playTile);
+        CommandInvoker.ExecuteCommand(new Connect(source, toPlay.construction, source.color));
+    }
+
+    private Construction FindFirst(Construction current, Tile target)
+    {
+        Construction success = null;
+        if (GameManager.manager.board.TileInConstructionRange(current, target)) return current;
+        else foreach (WireConnection wc in current.connections) if ((success = FindFirst(wc.target, target)) != null) break;
+        return success;
+    }
     #endregion
 }

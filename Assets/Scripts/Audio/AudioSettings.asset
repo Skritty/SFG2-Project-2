@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8e2d75e4412f9b4180a8b2eb80f452b, type: 3}
+  m_Name: AudioSettings
+  m_EditorClassIdentifier: 
+  audioPlayer: {fileID: 2157323269464920558, guid: d860520e3caab614d9b2f0ef3d0659f6,
+    type: 3}
+  menuMusic: {fileID: 8300000, guid: e9499b8400a2ced4ea07a46d818e709b, type: 3}
+  playerMusic: {fileID: 8300000, guid: cc23cf9c53a081f459d8cbea965faa59, type: 3}
+  botMusic: {fileID: 0}
+  turnChange: {fileID: 8300000, guid: 6f1ce941fe3fefe468ce440cc940a6a4, type: 3}
+  cardHover: {fileID: 8300000, guid: b0fcf392c1a6b244db5c2ff85b8eb56f, type: 3}
+  cardDraw: {fileID: 8300000, guid: b0fcf392c1a6b244db5c2ff85b8eb56f, type: 3}
+  cardPickup: {fileID: 8300000, guid: b0fcf392c1a6b244db5c2ff85b8eb56f, type: 3}
+  cardDrop: {fileID: 8300000, guid: 5b2a42ebc1236b240831cbe9ce4ee04e, type: 3}
+  tileSelect: {fileID: 8300000, guid: 5065c9e7e406d9542978ae29939b0a04, type: 3}
+  tileHover: {fileID: 8300000, guid: 5065c9e7e406d9542978ae29939b0a04, type: 3}

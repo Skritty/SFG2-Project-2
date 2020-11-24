@@ -62,6 +62,30 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void LowerBuildsRemaining(int amt)
+    {
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                board[i][j].buildsRemaining -= amt;
+                board[i][j].buildsRemaining = Mathf.Clamp(board[i][j].buildsRemaining, 0, 100000);
+            }
+        }
+    }
+
+    public bool HasBuildSpot()
+    {
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                if(board[i][j].buildsRemaining > 0) return true;
+            }
+        }
+        return false;
+    }
+
     public List<Tile> GetConstructionTilesInRadius(Tile tile, int radius)
     {
         List<Tile> tiles = new List<Tile>();
@@ -110,6 +134,21 @@ public class Board : MonoBehaviour
         return false;
     }
 
+    public bool TileInConstructionRange(Construction c, Tile tile)
+    {
+        Tile t = c.tile;
+        int radius = c.Data.EffectRange;
+        for (int i = Mathf.Clamp(t.x - radius, 0, boardWidth - 1); i <= Mathf.Clamp(t.x + radius, 0, boardWidth - 1); i++)
+        {
+            for (int j = Mathf.Clamp(t.y - radius, 0, boardWidth - 1); j <= Mathf.Clamp(t.y + radius, 0, boardWidth - 1); j++)
+            {
+                if ((Mathf.Abs(i - t.x) + Mathf.Abs(j - t.y) > radius + 1)) continue;
+                if (board[i][j] == tile) return true;
+            }
+        }
+        return false;
+    }
+
     public List<Tile> GetTilesInPlayerRange(int playerIndex, int radius)
     {
         List<Tile> tiles = new List<Tile>();
@@ -133,7 +172,7 @@ public class Board : MonoBehaviour
         List<Tile> tiles = new List<Tile>();
         foreach (Construction c in GameManager.CurrentPlayer.ownedOnBoard)
         {
-            if (!(c.Data is IPowerTransferable) || c.connections.Count == c.Data.MaxOutputConnections) continue;
+            if (!(c.Data is IPowerTransferable) || c.connections.Count >= c.Data.MaxOutputConnections - 1 || c.tile.buildsRemaining == 0) continue;
             Tile tile = c.tile;
             int radius = c.Data.EffectRange;
             for (int i = Mathf.Clamp(tile.x - radius, 0, boardWidth - 1); i <= Mathf.Clamp(tile.x + radius, 0, boardWidth - 1); i++)

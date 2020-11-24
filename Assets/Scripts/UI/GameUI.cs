@@ -21,8 +21,14 @@ public class GameUI : MonoBehaviour
     public GameObject winScreen;
     public GameObject loseScreen;
     public Button playerEndTurnButton;
+    public Transform playerEndTurnButtonPos1;
+    public Transform playerEndTurnButtonPos2;
     public TextMeshProUGUI playerEndTurnButtonText;
     public TextMeshProUGUI boardPositionText;
+    public TextMeshProUGUI Player1CorePower;
+    public TextMeshProUGUI Player1ObeliskPower;
+    public TextMeshProUGUI Player2CorePower;
+    public TextMeshProUGUI Player2ObeliskPower;
 
     [Header("Card Anchors")]
     [SerializeField] Transform machineDeckAnchor;
@@ -64,51 +70,71 @@ public class GameUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        DisplayDeck(player.machineDeck, machineDeckAnchor);
-        DisplayDeck(player.infrastructureDeck, infrastructureDeckAnchor);
-        DisplayHand(player.hand, handAnchor);
-        DisplayDiscard(player.discard, discardAnchor);
+        Player1CorePower.text = "" + GameManager.manager.players[0].coreCurrentPower + "/" + GameManager.manager.players[0].CoreMaxPower;
+        Player1ObeliskPower.text = "" + GameManager.manager.players[0].obelistPowerCurrent + "/" + GameManager.manager.players[0].ObeliskPowerToWin;
+        Player2CorePower.text = "" + GameManager.manager.players[1].coreCurrentPower + "/" + GameManager.manager.players[1].CoreMaxPower;
+        Player2ObeliskPower.text = "" + GameManager.manager.players[1].obelistPowerCurrent + "/" + GameManager.manager.players[1].ObeliskPowerToWin;
 
-        DisplayDeck(otherPlayer.machineDeck, otherMachineDeckAnchor);
-        DisplayDeck(otherPlayer.infrastructureDeck, otherInfrastructureDeckAnchor);
-        DisplayHand(otherPlayer.hand, otherHandAnchor);
-        DisplayDiscard(otherPlayer.discard, otherDiscardAnchor);
+        DisplayDeck(player.machineDeck, machineDeckAnchor, true, settings.DeckCardDistBetween, 1f);
+        DisplayDeck(player.infrastructureDeck, infrastructureDeckAnchor, true, settings.DeckCardDistBetween, 1f);
+        DisplayHand(player.hand, handAnchor, false, settings.HandCardDistBetween, 1f);
+        DisplayDeck(player.discard, discardAnchor, false, settings.DiscardCardDistBetween, 1f);
+
+        DisplayDeck(otherPlayer.machineDeck, otherMachineDeckAnchor, true, settings.DeckCardDistBetween, settings.EnemyCardScale);
+        DisplayDeck(otherPlayer.infrastructureDeck, otherInfrastructureDeckAnchor, true, settings.DeckCardDistBetween, settings.EnemyCardScale);
+        DisplayHand(otherPlayer.hand, otherHandAnchor, true, settings.EnemyHandCardDistBetween, settings.EnemyCardScale);
+        DisplayDeck(otherPlayer.discard, otherDiscardAnchor, false, settings.DiscardCardDistBetween, settings.EnemyCardScale);
     }
 
-    private void DisplayDeck(Deck<Construction> deck, Transform anchor)
+    public void FlipAndLerpCard()
+    {
+
+    }
+
+    public void HideButton()
+    {
+        StartCoroutine(LerpButton(.5f, false));
+    }
+
+    public void ShowButton()
+    {
+        StartCoroutine(LerpButton(.5f, true));
+    }
+
+    private IEnumerator LerpButton(float time, bool reverse)
+    {
+        Vector2 dist = (playerEndTurnButtonPos1.position - playerEndTurnButtonPos2.position) * (reverse ? -1 : 1);
+        for(int i = 0; i < 100; i++)
+        {
+            playerEndTurnButton.transform.position += (Vector3)dist / 100f;
+            yield return new WaitForSecondsRealtime(time / 100f);
+        }
+    }
+
+    private void DisplayDeck(Deck<Construction> deck, Transform anchor, bool flip, Vector2 dist, float scale)
     {
         for(int i = 0; i < deck.Count; i++)
         {
-            Vector2 pos = (-settings.DeckCardDistBetween * deck.Count + Vector2.right) / 2 + settings.DeckCardDistBetween * i;
+            //deck.GetCard(i).card.Transform(Vector3.zero, scale);
+            Vector2 pos = (-dist * deck.Count + Vector2.right) / 2 + settings.DeckCardDistBetween * i;
             deck.GetCard(i).card.transform.parent = anchor;
             deck.GetCard(i).card.transform.localPosition = pos;
-            deck.GetCard(i).card.Flip(true);
+            deck.GetCard(i).card.Flip(flip);
             deck.GetCard(i).card.UpdateInitialTransform();
         }
     }
 
-    private void DisplayHand(List<Construction> hand, Transform anchor)
+    private void DisplayHand(List<Construction> hand, Transform anchor, bool flip, Vector2 dist, float scale)
     {
         for (int i = hand.Count-1; i >= 0; i--)
         {
-            Vector2 pos = (-settings.HandCardDistBetween * hand.Count + Vector2.right) / 2 + settings.HandCardDistBetween * i;
+            //hand[i].card.Transform(Vector3.zero, scale);Debug.Log(scale);
+            Vector2 pos = (-dist * hand.Count + Vector2.right) / 2 + dist * i;
             hand[i].card.transform.parent = anchor;
             hand[i].card.transform.SetAsLastSibling();
             hand[i].card.transform.localPosition = pos;
-            hand[i].card.Flip(false);
+            hand[i].card.Flip(flip);
             hand[i].card.UpdateInitialTransform();
-        }
-    }
-
-    private void DisplayDiscard(Deck<Construction> discard, Transform anchor)
-    {
-        for (int i = 0; i < discard.Count; i++)
-        {
-            Vector2 pos = (-settings.DiscardCardDistBetween * discard.Count + Vector2.right) / 2 + settings.DiscardCardDistBetween * i;
-            discard.GetCard(i).card.transform.parent = anchor;
-            discard.GetCard(i).card.transform.localPosition = pos;
-            discard.GetCard(i).card.Flip(false);
-            discard.GetCard(i).card.UpdateInitialTransform();
         }
     }
 
@@ -156,6 +182,8 @@ public class GameUI : MonoBehaviour
             hoverInfo.transform.position = screenPos;
             hoverInfo.cardName.text = tile.contains.Data.name;
             hoverInfo.powerUsage.text = ""+ tile.contains.Data.PowerConsumption;
+            hoverInfo.powerIntake.text = ""+ tile.contains.powerIntake;
+            hoverInfo.powerOutput.text = ""+ tile.contains.powerOutput;
             hoverInfo.gameObject.SetActive(true);
             foreach (Tile t in GameManager.manager.board.GetAllTilesInRadius(tile, tile.contains.Data.EffectRange)) t.SetMaterial(settings.HoverAoE);
         }

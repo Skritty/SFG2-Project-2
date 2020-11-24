@@ -8,4 +8,6 @@ public class CardHoverInfo : MonoBehaviour
 {
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI powerUsage;
+    public TextMeshProUGUI powerIntake;
+    public TextMeshProUGUI powerOutput;
 }

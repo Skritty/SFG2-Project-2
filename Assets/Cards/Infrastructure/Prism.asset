@@ -17,8 +17,7 @@ MonoBehaviour:
   powerConsumption: 1
   effectRange: 2
   cardRating: 5
-  description: Splits a white cable into multiple colors, or combines colors into
-    a white cable.
+  description: Similar to a Pylon, but lets you use 3 colors of cables.
   image: {fileID: 0}
   boardPiece: {fileID: 6590426214662069992, guid: dc08d187761fed8409178083f8dec0c5,
     type: 3}

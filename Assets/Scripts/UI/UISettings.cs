@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "UISettings", menuName = "UI Settings")]
+[CreateAssetMenu(fileName = "UISettings", menuName = "Settings/UI Settings")]
 public class UISettings : ScriptableObject
 {
     [Header("Field UI")]
@@ -59,8 +59,14 @@ public class UISettings : ScriptableObject
     [SerializeField] Vector2 handCardDistBetween;
     public Vector2 HandCardDistBetween => handCardDistBetween;
 
+    [SerializeField] Vector2 enemyHandCardDistBetween;
+    public Vector2 EnemyHandCardDistBetween => enemyHandCardDistBetween;
+
     [SerializeField] Vector2 discardCardDistBetween;
     public Vector2 DiscardCardDistBetween => discardCardDistBetween;
+
+    [SerializeField] float enemyCardScale;
+    public float EnemyCardScale => enemyCardScale;
 
 
     [Header("Tile")]

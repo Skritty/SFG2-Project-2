@@ -6,6 +6,7 @@ public class CGSInitial : CardGameState
 {
     public override void Enter()
     {
+        GameManager.manager.audioManager.SwitchSongs(GameManager.manager.audioManager.settings.PlayerMusic);
         foreach(Player p in manager.players)
         {
             CreateDecks(p);
@@ -36,6 +37,12 @@ public class CGSInitial : CardGameState
             p.infrastructureDeck.Add(new Construction(data, p.playerIndex, p.defaultCard));
         }
         p.infrastructureDeck.Shuffle();
+
+        foreach (ConstructionData data in p.discardInitial)
+        {
+            p.discard.Add(new Construction(data, p.playerIndex, p.defaultCard));
+        }
+        p.discard.Shuffle();
     }
 
     private void InitializePlayer(Player p)
